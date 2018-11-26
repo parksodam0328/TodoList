@@ -4,16 +4,16 @@
   <div class="input-group" style="margin-bottom:10px;">
     <input type="text" class="form-control" 
       placeholder="할일을 입력하세요" 
-      v-model="name" 
-      v-on:keyup.enter="createTodo(name)">
+      v-model="title" 
+      v-on:keyup.enter="createTodo(title)">
     <span class="input-group-btn">
       <button class="btn btn-default" type="button" 
-      @click="createTodo(name)">추가</button>
+      @click="createTodo(title)">추가</button>
     </span>
   </div>
   <ul class="list-group">
     <li class="list-group-item" v-for="(todo, index) in todos">
-      {{todo.name}}
+      {{todo.title}}
       <div class="btn-group pull-right" 
         style="font-size: 12px; line-height: 1;">
         <button type="button" 
@@ -33,12 +33,13 @@
   </ul>
 </div>
 </template>
- <script>
+
+<script>
 export default {
   name: 'TodoPage',
   data(){ 
     return {
-    name:null,
+    title:null,
     todos: [],
     }
   },
@@ -47,30 +48,29 @@ export default {
       var vm = this
       this.todos.forEach(function(_todo,i, obj){
         if(_todo.id === todo.id){
-          vm.$http.delete('https://todos.garam.xyz/api/todos/'+todo.id)
+          vm.$http.delete('/todos/todo/'+todo.id)
           .then((result) => {
               obj.splice(i, 1)
           })  
         }
       })
     },
-    createTodo(name){
-      if(name != null){
-        var vm = this;
+    createTodo(title){
+      if(title != null){
+        
         this.$http.defaults.headers.post['Content-Type'] = 'application/json';
-        this.$http.post('https://todos.garam.xyz/api/todos',{
-          name:name
+        this.$http.post('/todos/todo',{
+          title:title
         }).then((result) => {
-            vm.todos.push(result.data);
+            this.todos.push(result.data);
         })
-        this.name = null
+        
       }
     },
     getTodos(){
-      var vm = this;
-      this.$http.get('https://todos.garam.xyz/api/todos')
+      this.$http.get('/todos/todo')
       .then((result) => {
-          vm.todos = result.data.data;
+          this.todos = result.data;
       })
     }
   },
@@ -78,4 +78,4 @@ export default {
     this.getTodos();
   }
 }
-</script> 
+</script>

@@ -6,7 +6,15 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
+    proxyTable: {
+    '/api': {
+    target: 'http://localhost:3000/todoList',
+    changeOrigin: true,
+    pathRewrite: {
+    '^/api': '' 
+    }
+    },
+    },
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -35,7 +43,7 @@ module.exports = {
 
     cssSourceMap: true
   },
-
+  
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
